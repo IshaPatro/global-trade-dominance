@@ -151,10 +151,18 @@ if df_2000 is not None and df_2024 is not None:
             showcoastlines=True,
             coastlinecolor='Black',
             showland=True,
-            landcolor='lightgray',
+            landcolor='#f0f0f0',
             showocean=True,
-            oceancolor='aliceblue',
-            projection_type='orthographic'
+            oceancolor='white',
+            projection_type='orthographic',
+            bgcolor='black',
+            framecolor='black'
+        )
+        
+        fig_2000.update_layout(
+            paper_bgcolor='black',
+            plot_bgcolor='black',
+            font=dict(color='white')
         )
         
         fig_dict = fig_2000.to_dict()
@@ -177,22 +185,37 @@ if df_2000 is not None and df_2024 is not None:
             Plotly.newPlot('chart_2000', fig.data, fig.layout);
             
             function rotateGlobe() {{
+                const fps = 30;
+                const interval = 1000 / fps;
                 var degrees = 0;
-                setInterval(function() {{
-                    degrees += 2;
-                    if (degrees > 360) degrees = 0;
+                var lastTime = 0;
+                
+                function animate(currentTime) {{
+                    if (!lastTime) lastTime = currentTime;
+                    const deltaTime = currentTime - lastTime;
                     
-                    Plotly.relayout('chart_2000', {{
-                        'geo.projection.rotation.lon': degrees
-                    }});
-                }}, 100);
+                    if (deltaTime >= 50) {{
+                        degrees = (degrees + 0.5) % 360;
+                        
+                        Plotly.relayout('chart_2000', {{
+                            'geo.projection.rotation.lon': degrees,
+                            'geo.projection.rotation.duration': 0
+                        }});
+                        
+                        lastTime = currentTime;
+                    }}
+                    
+                    requestAnimationFrame(animate);
+                }}
+                
+                requestAnimationFrame(animate);
             }}
             
             Plotly.newPlot('chart_2000', fig.data, fig.layout).then(rotateGlobe);
         </script>
         """
         
-        html(html_2000, height=600, scrolling=False)
+        html(html_2000, height=615, scrolling=False)
 
     with col2:
         st.markdown('#### 2024 Trade Dominance')
@@ -211,10 +234,18 @@ if df_2000 is not None and df_2024 is not None:
             showcoastlines=True,
             coastlinecolor='Black',
             showland=True,
-            landcolor='lightgray',
+            landcolor='#f0f0f0',
             showocean=True,
-            oceancolor='aliceblue',
-            projection_type='orthographic'
+            oceancolor='white',
+            projection_type='orthographic',
+            bgcolor='black',
+            framecolor='black'
+        )
+        
+        fig_2024.update_layout(
+            paper_bgcolor='black',
+            plot_bgcolor='black',
+            font=dict(color='white')
         )
         
         fig_dict = fig_2024.to_dict()
@@ -230,21 +261,34 @@ if df_2000 is not None and df_2024 is not None:
             
             function rotateGlobe() {{
                 var degrees = 0;
-                setInterval(function() {{
-                    degrees += 2;
-                    if (degrees > 360) degrees = 0;
+                var lastTime = 0;
+                
+                function animate(currentTime) {{
+                    if (!lastTime) lastTime = currentTime;
+                    const deltaTime = currentTime - lastTime;
                     
-                    Plotly.relayout('chart_2024', {{
-                        'geo.projection.rotation.lon': degrees
-                    }});
-                }}, 100);
+                    if (deltaTime >= 50) {{
+                        degrees = (degrees + 0.5) % 360;
+                        
+                        Plotly.relayout('chart_2024', {{
+                            'geo.projection.rotation.lon': degrees,
+                            'geo.projection.rotation.duration': 0
+                        }});
+                        
+                        lastTime = currentTime;
+                    }}
+                    
+                    requestAnimationFrame(animate);
+                }}
+                
+                requestAnimationFrame(animate);
             }}
             
             Plotly.newPlot('chart_2024', fig.data, fig.layout).then(rotateGlobe);
         </script>
         """
         
-        html(html_2024, height=600, scrolling=False)
+        html(html_2024, height=615, scrolling=False)
     
     
     st.markdown("### Data Summary")
@@ -358,7 +402,7 @@ if df_2000 is not None and df_2024 is not None:
             return 'background-color: red'
         return ''
     
-    styled_df = multi_df.style.applymap(
+    styled_df = multi_df.style.map(
         highlight_dominance,
         subset=pd.IndexSlice[:, [('2000', 'Dominance'), ('2024', 'Dominance')]]
     )
