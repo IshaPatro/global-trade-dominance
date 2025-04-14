@@ -9,7 +9,7 @@ from streamlit.components.v1 import html
 
 st.set_page_config(layout="wide", page_title="US vs China Trade Dominance")
 
-st.title("Global Trade Dominance: U.S. vs. China (2024)")
+st.title("Global Trade Dominance: U.S. vs. China (2000 vs 2024)")
 
 @st.cache_data
 def load_data():
@@ -226,7 +226,7 @@ if df_2000 is not None and df_2024 is not None:
             color='Dominance',
             hover_name='Country',
             color_discrete_map={'US': 'blue', 'China': 'red'},
-            title='US vs China Trade Dominance (2024)',
+            title='US vs China Trade Dominance (2000 vs 2024)',
             hover_data=['US', 'China']
         )
         
@@ -291,7 +291,6 @@ if df_2000 is not None and df_2024 is not None:
         html(html_2024, height=615, scrolling=False)
     
     
-    st.markdown("### Data Summary")
     total_us_trade_2000 = df_2000["US"].sum()/1000
     total_china_trade_2000 = df_2000["China"].sum()/1000
     total_us_trade_2024 = df_2024["US"].sum()/1000
@@ -303,8 +302,8 @@ if df_2000 is not None and df_2024 is not None:
     us_dominant_countries_2024 = len(df_2024[df_2024["Dominance"] == "US"])
     china_dominant_countries_2024 = len(df_2024[df_2024["Dominance"] == "China"])
     
-    st.write("""In 2000, the United States was the undisputed global trade leader, with a total trade volume of $1.88 trillion, more than five times China's $362 billion. At that time, the U.S. was the dominant trade partner for the vast majority of countries.
-    However, over the next 24 years, China's trade grew exponentially—by nearly 1,380%, reaching $5.35 trillion in 2024. In contrast, the U.S. trade volume grew by around 152%, reaching $4.75 trillion.""")
+    st.write("""In 2000, the United States was the undisputed global trade leader, with a total trade volume of \$1.88 trillion, more than five times China's \$362 billion. At that time, the U.S. was the dominant trade partner for the vast majority of countries.
+    However, over the next 24 years, China's trade grew exponentially—by nearly 1,380%, reaching \$5.35 trillion in 2024. In contrast, the U.S. trade volume grew by around 152%, reaching \$4.75 trillion.""")
     
     col1, col2= st.columns(2)
     with col1:
@@ -324,8 +323,6 @@ if df_2000 is not None and df_2024 is not None:
     china_pct_2000 = (china_dominant_countries_2000 / total_countries_2000) * 100
     us_pct_2024 = (us_dominant_countries_2024 / total_countries_2024) * 100
     china_pct_2024 = (china_dominant_countries_2024 / total_countries_2024) * 100
-    
-    st.markdown("#### Trade Dominance Comparison (2000 vs 2024)")
     pie_col1, pie_col2 = st.columns(2)
     
     with pie_col1:
